@@ -161,7 +161,7 @@ export function drawUI(
 }
 
 export function drawGameOver(ctx: CanvasRenderingContext2D, layout: Layout, score: number) {
-  const { boardX, boardY, boardWidth, boardHeight } = layout;
+  const { boardX, boardY, boardWidth, boardHeight, touchEnabled } = layout;
   const centerX = boardX + boardWidth / 2;
   const centerY = boardY + boardHeight / 2;
 
@@ -179,11 +179,11 @@ export function drawGameOver(ctx: CanvasRenderingContext2D, layout: Layout, scor
   ctx.fillText(`Score: ${score.toLocaleString()}`, centerX, centerY + 20);
 
   ctx.font = '14px system-ui, sans-serif';
-  ctx.fillText('Press R to restart', centerX, centerY + 50);
+  ctx.fillText(touchEnabled ? 'Tap to restart' : 'Press R to restart', centerX, centerY + 50);
 }
 
 export function drawPause(ctx: CanvasRenderingContext2D, layout: Layout) {
-  const { boardX, boardY, boardWidth, boardHeight } = layout;
+  const { boardX, boardY, boardWidth, boardHeight, touchEnabled } = layout;
   const centerX = boardX + boardWidth / 2;
   const centerY = boardY + boardHeight / 2;
 
@@ -197,5 +197,5 @@ export function drawPause(ctx: CanvasRenderingContext2D, layout: Layout) {
 
   ctx.font = '14px system-ui, sans-serif';
   ctx.fillStyle = '#888';
-  ctx.fillText('Press ESC to resume', centerX, centerY + 35);
+  ctx.fillText(touchEnabled ? 'Tap pause to resume' : 'Press ESC to resume', centerX, centerY + 35);
 }

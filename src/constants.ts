@@ -56,6 +56,13 @@ export const PIECE_COLORS_DARK: Record<PieceType, string> = {
   L: '#9b6800',
 };
 
+// Touch input
+export const TOUCH_DRAG_THRESHOLD = 10;
+export const TOUCH_TAP_MAX_MS = 200;
+export const TOUCH_TAP_MAX_DISTANCE = 15;
+export const TOUCH_SWIPE_VELOCITY = 0.8; // px/ms
+export const TOUCH_BUTTON_GAP = 12;
+
 export const GHOST_ALPHA = 0.25;
 export const BOARD_BG = '#1a1a2e';
 export const GRID_COLOR = '#2a2a4a';

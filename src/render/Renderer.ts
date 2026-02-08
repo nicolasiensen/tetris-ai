@@ -1,7 +1,9 @@
 import { drawBoard } from './BoardRenderer.ts';
 import { drawUI, drawGameOver, drawPause } from './UIRenderer.ts';
+import { drawTouchButtons } from './TouchButtonRenderer.ts';
 import type { Layout } from '../layout.ts';
 import type { GameState } from '../game/GameState.ts';
+import type { TouchButtonState } from '../game/TouchInput.ts';
 
 const SHAKE_DURATION = 150; // ms
 const SHAKE_INTENSITY = 5;  // max pixels offset
@@ -20,7 +22,7 @@ export class Renderer {
     this.shakeTimer = SHAKE_DURATION;
   }
 
-  render(state: GameState, delta: number) {
+  render(state: GameState, delta: number, touchButtonState?: TouchButtonState) {
     const ctx = this.ctx;
     const layout = this.layout;
 
@@ -50,6 +52,10 @@ export class Renderer {
       state.level,
       state.lines,
     );
+
+    if (layout.touchEnabled && touchButtonState) {
+      drawTouchButtons(ctx, layout, touchButtonState);
+    }
 
     if (state.isGameOver) {
       drawGameOver(ctx, layout, state.score);
