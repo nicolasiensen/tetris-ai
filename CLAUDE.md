@@ -9,7 +9,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Preview production build:** `npm run preview`
 - **Type check only:** `npx tsc --noEmit`
 
-There are no tests or linting configured.
+- **Run tests:** `npm run test` (one-off run via Vitest)
+- **Watch mode:** `npm run test:watch` (continuous feedback)
+
+## Testing Workflow
+
+- **Run tests after every file change** to catch regressions immediately
+- **Write a test for every new or changed behavior** — if you add a feature or fix a bug, write or update the corresponding test file first or alongside the change
+- Test files live next to their source files (e.g., `Board.ts` → `Board.test.ts`)
+- Tests use a mock randomizer pattern for deterministic GameState tests (cast `as unknown as Randomizer`)
 
 ## Architecture
 

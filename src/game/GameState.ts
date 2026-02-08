@@ -32,6 +32,7 @@ export class GameState {
   clearingRows: number[] = [];
   clearAnimTimer = 0;
 
+  private createRandomizer: () => Randomizer;
   private randomizer: Randomizer;
   private dropTimer = 0;
   private lockTimer = 0;
