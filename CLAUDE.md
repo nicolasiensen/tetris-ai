@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Tooling
+
+- **mise** is used to manage project dependencies (node, npm, etc.)
+
 ## Commands
 
 - **Dev server:** `npm run dev` (Vite dev server with HMR)
