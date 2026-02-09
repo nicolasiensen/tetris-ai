@@ -1,5 +1,5 @@
 import { drawBoard } from './BoardRenderer.ts';
-import { drawUI, drawGameOver, drawPause } from './UIRenderer.ts';
+import { drawUI, drawControlsLegend, drawGameOver, drawPause } from './UIRenderer.ts';
 import { drawTouchButtons } from './TouchButtonRenderer.ts';
 import type { Layout } from '../layout.ts';
 import type { GameState } from '../game/GameState.ts';
@@ -52,6 +52,7 @@ export class Renderer {
       state.level,
       state.lines,
     );
+    drawControlsLegend(ctx, layout);
 
     if (layout.touchEnabled && touchButtonState) {
       drawTouchButtons(ctx, layout, touchButtonState);

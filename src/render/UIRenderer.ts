@@ -160,6 +160,56 @@ export function drawUI(
   ctx.fillText(lines.toString(), col3, valueY);
 }
 
+export function drawControlsLegend(ctx: CanvasRenderingContext2D, layout: Layout) {
+  const { boardY, holdPanelX, holdPanelWidth, miniCell, touchEnabled } = layout;
+
+  const holdHeight = miniCell * 4 + 30;
+  const legendTop = boardY + holdHeight + 15;
+  const centerX = holdPanelX + holdPanelWidth / 2;
+  const fontSize = Math.max(9, Math.round(miniCell * 0.5));
+  const lineHeight = fontSize + 4;
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#888';
+  ctx.font = `bold ${fontSize}px system-ui, sans-serif`;
+  ctx.fillText('CONTROLS', centerX, legendTop);
+
+  ctx.font = `${fontSize}px system-ui, sans-serif`;
+
+  const entries: [string, string][] = touchEnabled
+    ? [
+        ['Tap', 'Rotate'],
+        ['Drag ←→', 'Move'],
+        ['Drag ↓', 'Soft Drop'],
+        ['Swipe ↓', 'Hard Drop'],
+      ]
+    : [
+        ['← →', 'Move'],
+        ['↓', 'Soft Drop'],
+        ['Space', 'Hard Drop'],
+        ['↑ / X', 'Rotate CW'],
+        ['Z', 'Rotate CCW'],
+        ['Shift/C', 'Hold'],
+        ['Esc', 'Pause'],
+      ];
+
+  const keyColX = holdPanelX + 6;
+  const actionColX = holdPanelX + holdPanelWidth - 6;
+
+  for (let i = 0; i < entries.length; i++) {
+    const y = legendTop + lineHeight * (i + 1.5);
+    const [key, action] = entries[i];
+
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#888';
+    ctx.fillText(key, keyColX, y);
+
+    ctx.textAlign = 'right';
+    ctx.fillStyle = TEXT_COLOR;
+    ctx.fillText(action, actionColX, y);
+  }
+}
+
 export function drawGameOver(ctx: CanvasRenderingContext2D, layout: Layout, score: number) {
   const { boardX, boardY, boardWidth, boardHeight, touchEnabled } = layout;
   const centerX = boardX + boardWidth / 2;
