@@ -69,8 +69,14 @@ export class GameLoop {
   };
 
   private applyLayout(layout: ReturnType<typeof computeLayout>): void {
-    this.canvas.width = layout.canvasWidth;
-    this.canvas.height = layout.canvasHeight;
+    const dpr = window.devicePixelRatio || 1;
+    this.canvas.width = layout.canvasWidth * dpr;
+    this.canvas.height = layout.canvasHeight * dpr;
+    this.canvas.style.width = `${layout.canvasWidth}px`;
+    this.canvas.style.height = `${layout.canvasHeight}px`;
+    // Setting canvas.width resets the context transform, so re-apply DPR scaling
+    const ctx = this.canvas.getContext('2d')!;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   stop(): void {
