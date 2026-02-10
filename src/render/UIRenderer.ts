@@ -191,6 +191,7 @@ export function drawControlsLegend(ctx: CanvasRenderingContext2D, layout: Layout
         ['Z', 'Rotate CCW'],
         ['Shift/C', 'Hold'],
         ['Esc', 'Pause'],
+        ['M', 'Mute'],
       ];
 
   const keyColX = holdPanelX + 6;

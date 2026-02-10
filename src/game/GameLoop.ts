@@ -2,6 +2,7 @@ import { GameState } from './GameState.ts';
 import { Input } from './Input.ts';
 import { TouchInput } from './TouchInput.ts';
 import { Renderer } from '../render/Renderer.ts';
+import { AudioManager } from '../audio/AudioManager.ts';
 import { computeLayout } from '../layout.ts';
 
 function isTouchDevice(): boolean {
@@ -15,6 +16,9 @@ export class GameLoop {
   private input: Input;
   private touchInput: TouchInput | null = null;
   private renderer: Renderer;
+  private audioManager: AudioManager;
+  private audioStarted = false;
+  private wasGameOver = false;
   private canvas: HTMLCanvasElement;
   private touchEnabled: boolean;
 
@@ -26,6 +30,7 @@ export class GameLoop {
     this.gameState = new GameState();
     this.input = new Input();
     this.renderer = new Renderer(ctx, layout);
+    this.audioManager = new AudioManager();
     this.applyLayout(layout);
 
     if (this.touchEnabled) {
@@ -34,12 +39,22 @@ export class GameLoop {
     }
 
     window.addEventListener('resize', this.onResize);
+    window.addEventListener('keydown', this.onFirstInteraction, { once: true });
+    window.addEventListener('touchstart', this.onFirstInteraction, { once: true });
   }
 
   start(): void {
     this.lastTime = performance.now();
     this.loop(this.lastTime);
   }
+
+  private onFirstInteraction = (): void => {
+    if (!this.audioStarted) {
+      this.audioStarted = true;
+      this.audioManager.init();
+      this.audioManager.play();
+    }
+  };
 
   private loop = (currentTime: number): void => {
     const delta = currentTime - this.lastTime;
@@ -55,6 +70,27 @@ export class GameLoop {
       this.renderer.triggerShake();
       this.gameState.hardDropped = false;
     }
+
+    // Mute toggle
+    if (this.input.muteToggled) {
+      this.audioManager.toggleMute();
+      this.input.muteToggled = false;
+    }
+
+    // Audio state sync
+    if (this.audioStarted) {
+      if (this.gameState.isGameOver) {
+        this.audioManager.stop();
+      } else if (this.wasGameOver && !this.gameState.isGameOver) {
+        this.audioManager.restart();
+      } else if (this.gameState.isPaused) {
+        this.audioManager.pause();
+      } else {
+        this.audioManager.resume();
+        this.audioManager.setLevel(this.gameState.level);
+      }
+    }
+    this.wasGameOver = this.gameState.isGameOver;
 
     this.renderer.render(this.gameState, cappedDelta, this.touchInput?.buttonState);
 
@@ -82,7 +118,10 @@ export class GameLoop {
   stop(): void {
     cancelAnimationFrame(this.animationId);
     window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('keydown', this.onFirstInteraction);
+    window.removeEventListener('touchstart', this.onFirstInteraction);
     this.input.destroy();
     this.touchInput?.destroy();
+    this.audioManager.destroy();
   }
 }

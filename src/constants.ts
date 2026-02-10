@@ -63,6 +63,14 @@ export const TOUCH_TAP_MAX_DISTANCE = 15;
 export const TOUCH_SWIPE_VELOCITY = 0.8; // px/ms
 export const TOUCH_BUTTON_GAP = 12;
 
+// Audio
+export const AUDIO_BASE_BPM = 130;
+export const AUDIO_MAX_BPM = 190;
+export const AUDIO_BPM_PER_LEVEL = (AUDIO_MAX_BPM - AUDIO_BASE_BPM) / 14; // ~4.286
+export const AUDIO_MASTER_VOLUME = 0.4;
+export const AUDIO_SCHEDULE_AHEAD = 0.1; // seconds to schedule ahead
+export const AUDIO_LOOKAHEAD = 25; // ms between scheduler checks
+
 export const GHOST_ALPHA = 0.25;
 export const BOARD_BG = '#1a1a2e';
 export const GRID_COLOR = '#2a2a4a';
