@@ -1,9 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "WebSearch",
-      "Bash(npx tsc:*)",
-      "Bash(npm run test:watch:*)"
-    ]
+    "allow": ["WebSearch", "Bash(npx tsc:*)", "Bash(npm run test:watch:*)"]
   }
 }
