@@ -8,12 +8,7 @@ export class SynthEngine {
   }
 
   // Detuned dual-sawtooth with lowpass filter sweep
-  playLeadNote(
-    freq: number,
-    time: number,
-    duration: number,
-    destination: AudioNode,
-  ): void {
+  playLeadNote(freq: number, time: number, duration: number, destination: AudioNode): void {
     const ctx = this.ctx;
 
     const osc1 = ctx.createOscillator();
@@ -48,12 +43,7 @@ export class SynthEngine {
   }
 
   // Sawtooth + sub-octave square, heavy lowpass
-  playBassNote(
-    freq: number,
-    time: number,
-    duration: number,
-    destination: AudioNode,
-  ): void {
+  playBassNote(freq: number, time: number, duration: number, destination: AudioNode): void {
     const ctx = this.ctx;
 
     const osc1 = ctx.createOscillator();
@@ -93,12 +83,7 @@ export class SynthEngine {
   }
 
   // Square wave with bandpass filter, short percussive
-  playArpNote(
-    freq: number,
-    time: number,
-    duration: number,
-    destination: AudioNode,
-  ): void {
+  playArpNote(freq: number, time: number, duration: number, destination: AudioNode): void {
     const ctx = this.ctx;
 
     const osc = ctx.createOscillator();

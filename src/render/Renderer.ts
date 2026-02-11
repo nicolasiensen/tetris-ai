@@ -6,7 +6,7 @@ import type { GameState } from '../game/GameState.ts';
 import type { TouchButtonState } from '../game/TouchInput.ts';
 
 const SHAKE_DURATION = 150; // ms
-const SHAKE_INTENSITY = 5;  // max pixels offset
+const SHAKE_INTENSITY = 5; // max pixels offset
 
 export class Renderer {
   private ctx: CanvasRenderingContext2D;
@@ -41,7 +41,15 @@ export class Renderer {
     ctx.clearRect(-10, -10, layout.canvasWidth + 20, layout.canvasHeight + 20);
     ctx.translate(offsetX, offsetY);
 
-    drawBoard(ctx, layout, state.board, state.activePiece, state.getGhostPosition(), state.clearingRows, state.clearAnimTimer);
+    drawBoard(
+      ctx,
+      layout,
+      state.board,
+      state.activePiece,
+      state.getGhostPosition(),
+      state.clearingRows,
+      state.clearAnimTimer,
+    );
     drawUI(
       ctx,
       layout,

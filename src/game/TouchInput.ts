@@ -90,13 +90,27 @@ export class TouchInput {
       if (state.isPaused) continue;
 
       switch (action.type) {
-        case 'rotateCW': state.rotate(1); break;
-        case 'rotateCCW': state.rotate(-1); break;
-        case 'hardDrop': state.hardDrop(); break;
-        case 'moveLeft': state.moveLeft(); break;
-        case 'moveRight': state.moveRight(); break;
-        case 'softDrop': state.softDrop(); break;
-        case 'hold': state.hold(); break;
+        case 'rotateCW':
+          state.rotate(1);
+          break;
+        case 'rotateCCW':
+          state.rotate(-1);
+          break;
+        case 'hardDrop':
+          state.hardDrop();
+          break;
+        case 'moveLeft':
+          state.moveLeft();
+          break;
+        case 'moveRight':
+          state.moveRight();
+          break;
+        case 'softDrop':
+          state.softDrop();
+          break;
+        case 'hold':
+          state.hold();
+          break;
       }
     }
   }
@@ -227,7 +241,10 @@ export class TouchInput {
         // Only clear pressed state if no other touch is on the same button
         let stillPressed = false;
         for (const b of this.activeBtnTouchIds.values()) {
-          if (b === btn) { stillPressed = true; break; }
+          if (b === btn) {
+            stillPressed = true;
+            break;
+          }
         }
         if (!stillPressed) this.buttonState[btn] = false;
         continue;

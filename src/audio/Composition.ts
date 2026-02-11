@@ -38,21 +38,141 @@ const BASS_ROOTS: number[] = [
 // Plays a cyberpunk-style melodic phrase over the chords
 const LEAD_PATTERN: (number | null)[] = [
   // Bar 1 (Em)
-  76, null, 71, null, 72, null, 71, null, 67, null, null, null, 64, null, null, null,
+  76,
+  null,
+  71,
+  null,
+  72,
+  null,
+  71,
+  null,
+  67,
+  null,
+  null,
+  null,
+  64,
+  null,
+  null,
+  null,
   // Bar 2 (Em)
-  76, null, 79, null, 76, null, 71, null, 72, null, 71, null, null, null, null, null,
+  76,
+  null,
+  79,
+  null,
+  76,
+  null,
+  71,
+  null,
+  72,
+  null,
+  71,
+  null,
+  null,
+  null,
+  null,
+  null,
   // Bar 3 (Am)
-  69, null, 72, null, 76, null, 72, null, 69, null, null, null, 76, null, null, null,
+  69,
+  null,
+  72,
+  null,
+  76,
+  null,
+  72,
+  null,
+  69,
+  null,
+  null,
+  null,
+  76,
+  null,
+  null,
+  null,
   // Bar 4 (Am)
-  77, null, 76, null, 72, null, 69, null, null, null, null, null, null, null, null, null,
+  77,
+  null,
+  76,
+  null,
+  72,
+  null,
+  69,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
   // Bar 5 (C)
-  79, null, 76, null, 72, null, 76, null, 79, null, null, null, 84, null, null, null,
+  79,
+  null,
+  76,
+  null,
+  72,
+  null,
+  76,
+  null,
+  79,
+  null,
+  null,
+  null,
+  84,
+  null,
+  null,
+  null,
   // Bar 6 (C)
-  79, null, 76, null, 72, null, null, null, 79, null, 76, null, null, null, null, null,
+  79,
+  null,
+  76,
+  null,
+  72,
+  null,
+  null,
+  null,
+  79,
+  null,
+  76,
+  null,
+  null,
+  null,
+  null,
+  null,
   // Bar 7 (B)
-  78, null, 75, null, 71, null, 75, null, 78, null, null, null, 83, null, null, null,
+  78,
+  null,
+  75,
+  null,
+  71,
+  null,
+  75,
+  null,
+  78,
+  null,
+  null,
+  null,
+  83,
+  null,
+  null,
+  null,
   // Bar 8 (B)
-  78, null, 75, null, 71, null, null, null, 75, null, 78, null, null, null, null, null,
+  78,
+  null,
+  75,
+  null,
+  71,
+  null,
+  null,
+  null,
+  75,
+  null,
+  78,
+  null,
+  null,
+  null,
+  null,
+  null,
 ];
 
 // Bass: step index within bar -> plays root + octave pattern
@@ -71,22 +191,22 @@ export interface DrumStep {
 
 const DRUM_PATTERN: DrumStep[] = [
   // Classic electronic beat
-  { kick: true,  snare: false, hihat: true  }, // 1
+  { kick: true, snare: false, hihat: true }, // 1
   { kick: false, snare: false, hihat: false }, //
-  { kick: false, snare: false, hihat: true  }, // 1+
+  { kick: false, snare: false, hihat: true }, // 1+
   { kick: false, snare: false, hihat: false }, //
-  { kick: false, snare: true,  hihat: true  }, // 2
+  { kick: false, snare: true, hihat: true }, // 2
   { kick: false, snare: false, hihat: false }, //
-  { kick: false, snare: false, hihat: true  }, // 2+
-  { kick: true,  snare: false, hihat: false }, //
-  { kick: true,  snare: false, hihat: true  }, // 3
+  { kick: false, snare: false, hihat: true }, // 2+
+  { kick: true, snare: false, hihat: false }, //
+  { kick: true, snare: false, hihat: true }, // 3
   { kick: false, snare: false, hihat: false }, //
-  { kick: false, snare: false, hihat: true  }, // 3+
+  { kick: false, snare: false, hihat: true }, // 3+
   { kick: false, snare: false, hihat: false }, //
-  { kick: false, snare: true,  hihat: true  }, // 4
+  { kick: false, snare: true, hihat: true }, // 4
   { kick: false, snare: false, hihat: false }, //
-  { kick: true,  snare: false, hihat: true  }, // 4+
-  { kick: false, snare: false, hihat: true  }, //
+  { kick: true, snare: false, hihat: true }, // 4+
+  { kick: false, snare: false, hihat: true }, //
 ];
 
 export const TOTAL_STEPS = 128; // 8 bars * 16 steps

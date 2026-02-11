@@ -57,8 +57,8 @@ export class AudioManager {
     const leadGain = ctx.createGain();
     leadGain.gain.value = 1;
     leadGain.connect(compressor); // dry
-    leadGain.connect(reverb);     // reverb send
-    leadGain.connect(delay);      // delay send
+    leadGain.connect(reverb); // reverb send
+    leadGain.connect(delay); // delay send
 
     const bassGain = ctx.createGain();
     bassGain.gain.value = 1;
@@ -67,7 +67,7 @@ export class AudioManager {
     const arpGain = ctx.createGain();
     arpGain.gain.value = 1;
     arpGain.connect(compressor);
-    arpGain.connect(delay);       // delay send for arp
+    arpGain.connect(delay); // delay send for arp
 
     const drumGain = ctx.createGain();
     drumGain.gain.value = 1;
@@ -78,15 +78,7 @@ export class AudioManager {
     const drums = new DrumEngine(ctx);
 
     // Create transport
-    this.transport = new Transport(
-      ctx,
-      synth,
-      drums,
-      leadGain,
-      bassGain,
-      arpGain,
-      drumGain,
-    );
+    this.transport = new Transport(ctx, synth, drums, leadGain, bassGain, arpGain, drumGain);
 
     this.state = 'stopped';
 

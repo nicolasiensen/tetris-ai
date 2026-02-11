@@ -51,7 +51,11 @@ export class Input {
     if (this.keysJustPressed.has('Space')) {
       state.hardDrop();
     }
-    if (this.keysJustPressed.has('ShiftLeft') || this.keysJustPressed.has('ShiftRight') || this.keysJustPressed.has('KeyC')) {
+    if (
+      this.keysJustPressed.has('ShiftLeft') ||
+      this.keysJustPressed.has('ShiftRight') ||
+      this.keysJustPressed.has('KeyC')
+    ) {
       state.hold();
     }
 
@@ -98,9 +102,7 @@ export class Input {
     this.keysJustPressed.add(e.code);
 
     // Prevent default for game keys
-    if (
-      ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Space'].includes(e.code)
-    ) {
+    if (['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Space'].includes(e.code)) {
       e.preventDefault();
     }
   };

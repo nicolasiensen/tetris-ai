@@ -30,22 +30,26 @@ This is a browser-based Tetris game built with TypeScript and rendered on an HTM
 ### Layer structure
 
 **`src/core/`** — Pure game logic with no side effects:
+
 - `Board.ts` — Board grid operations: creation, collision detection (`isValidPosition`), piece locking, row clearing
 - `Piece.ts` — Tetromino shape definitions (SRS rotation states as `[row, col]` offsets), spawn position constants
 - `Rotation.ts` — SRS wall kick tables (separate tables for I-piece vs JLSTZ) and `tryRotation` which tests kick offsets
 - `Randomizer.ts` — 7-bag random piece generator with peek-ahead support
 
 **`src/game/`** — Game state management and input:
+
 - `GameState.ts` — Central game state class: gravity, lock delay (with reset limit), line clear animation timing, scoring, level progression. Orchestrates core functions.
 - `GameLoop.ts` — `requestAnimationFrame` loop that wires Input → GameState.tick → Renderer. Handles canvas resizing.
 - `Input.ts` — Keyboard handler with DAS (Delayed Auto Shift) and ARR (Auto Repeat Rate) for left/right movement
 
 **`src/render/`** — Canvas 2D rendering (stateless draw functions + Renderer class):
+
 - `Renderer.ts` — Top-level render orchestrator with screen shake effect on hard drop
 - `BoardRenderer.ts` — Draws the board grid, locked cells, active piece, ghost piece, and line clear flash animation
 - `UIRenderer.ts` — Draws hold panel, next queue (5 pieces), score/level/lines stats, game over and pause overlays
 
 **`src/`** — Shared modules:
+
 - `types.ts` — Core type definitions (`PieceType`, `ActivePiece`, `BoardGrid`, etc.)
 - `constants.ts` — All tuning values: board dimensions (10x20 + 4 buffer rows), timing (DAS, ARR, lock delay), scoring table, colors
 - `layout.ts` — Responsive layout calculator that sizes everything based on viewport dimensions

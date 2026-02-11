@@ -31,7 +31,11 @@ export interface Layout {
   pauseButtonRect: ButtonRect;
 }
 
-export function computeLayout(viewportWidth: number, viewportHeight: number, touchEnabled = false): Layout {
+export function computeLayout(
+  viewportWidth: number,
+  viewportHeight: number,
+  touchEnabled = false,
+): Layout {
   const padding = 10;
   const topPadding = 20;
   const statsHeight = 55;
@@ -40,7 +44,8 @@ export function computeLayout(viewportWidth: number, viewportHeight: number, tou
   const buttonBarGap = touchEnabled ? TOUCH_BUTTON_GAP : 0;
 
   // Cell size based on available height
-  const availableHeight = viewportHeight - topPadding - statsHeight - bottomPadding - buttonBarHeight - buttonBarGap;
+  const availableHeight =
+    viewportHeight - topPadding - statsHeight - bottomPadding - buttonBarHeight - buttonBarGap;
   const cellFromHeight = Math.floor(availableHeight / VISIBLE_ROWS);
 
   // Also constrain by width: board + two side panels + gaps must fit
@@ -84,10 +89,20 @@ export function computeLayout(viewportWidth: number, viewportHeight: number, tou
     ? { x: buttonsStartX, y: buttonBarTop, width: buttonWidth, height: buttonBarHeight }
     : emptyRect;
   const rotateCCWButtonRect: ButtonRect = touchEnabled
-    ? { x: buttonsStartX + buttonWidth + TOUCH_BUTTON_GAP, y: buttonBarTop, width: buttonWidth, height: buttonBarHeight }
+    ? {
+        x: buttonsStartX + buttonWidth + TOUCH_BUTTON_GAP,
+        y: buttonBarTop,
+        width: buttonWidth,
+        height: buttonBarHeight,
+      }
     : emptyRect;
   const pauseButtonRect: ButtonRect = touchEnabled
-    ? { x: buttonsStartX + 2 * (buttonWidth + TOUCH_BUTTON_GAP), y: buttonBarTop, width: buttonWidth, height: buttonBarHeight }
+    ? {
+        x: buttonsStartX + 2 * (buttonWidth + TOUCH_BUTTON_GAP),
+        y: buttonBarTop,
+        width: buttonWidth,
+        height: buttonBarHeight,
+      }
     : emptyRect;
 
   return {

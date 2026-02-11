@@ -10,7 +10,14 @@ import {
   SOFT_DROP_FACTOR,
   SOFT_DROP_SCORE,
 } from '../constants.ts';
-import { createBoard, getCells, isValidPosition, lockPiece, findFullRows, removeRows } from '../core/Board.ts';
+import {
+  createBoard,
+  getCells,
+  isValidPosition,
+  lockPiece,
+  findFullRows,
+  removeRows,
+} from '../core/Board.ts';
 import { SPAWN_COL, SPAWN_ROW } from '../core/Piece.ts';
 import { tryRotation } from '../core/Rotation.ts';
 import { Randomizer } from '../core/Randomizer.ts';
@@ -232,11 +239,7 @@ export class GameState {
     lockPiece(this.board, this.activePiece);
 
     // Check if piece locked entirely above visible area
-    const cells = getCells(
-      this.activePiece.type,
-      this.activePiece.rotation,
-      this.activePiece.pos,
-    );
+    const cells = getCells(this.activePiece.type, this.activePiece.rotation, this.activePiece.pos);
     const allAbove = cells.every((c) => c.row < BUFFER_ROWS);
     if (allAbove) {
       this.isGameOver = true;

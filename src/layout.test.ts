@@ -33,7 +33,11 @@ describe('computeLayout', () => {
 
     it('computes button rects with positive dimensions', () => {
       const layout = computeLayout(800, 600, true);
-      for (const rect of [layout.holdButtonRect, layout.rotateCCWButtonRect, layout.pauseButtonRect]) {
+      for (const rect of [
+        layout.holdButtonRect,
+        layout.rotateCCWButtonRect,
+        layout.pauseButtonRect,
+      ]) {
         expect(rect.width).toBeGreaterThan(0);
         expect(rect.height).toBeGreaterThan(0);
         expect(rect.x).toBeGreaterThan(0);

@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { createBoard, getCells, isValidPosition, lockPiece, findFullRows, removeRows } from './Board.ts';
+import {
+  createBoard,
+  getCells,
+  isValidPosition,
+  lockPiece,
+  findFullRows,
+  removeRows,
+} from './Board.ts';
 import { COLS, TOTAL_ROWS } from '../constants.ts';
 
 describe('createBoard', () => {

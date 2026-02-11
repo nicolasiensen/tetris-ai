@@ -20,8 +20,9 @@ export function isValidPosition(
   pos: Position,
 ): boolean {
   const cells = getCells(type, rotation, pos);
-  return cells.every(({ row, col }) =>
-    row >= 0 && row < TOTAL_ROWS && col >= 0 && col < COLS && board[row][col] === null,
+  return cells.every(
+    ({ row, col }) =>
+      row >= 0 && row < TOTAL_ROWS && col >= 0 && col < COLS && board[row][col] === null,
   );
 }
 

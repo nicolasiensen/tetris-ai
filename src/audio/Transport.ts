@@ -8,13 +8,7 @@ import {
   AUDIO_SCHEDULE_AHEAD,
   AUDIO_LOOKAHEAD,
 } from '../constants.ts';
-import {
-  TOTAL_STEPS,
-  getLeadNote,
-  getBassFreq,
-  getArpFreq,
-  getDrumStep,
-} from './Composition.ts';
+import { TOTAL_STEPS, getLeadNote, getBassFreq, getArpFreq, getDrumStep } from './Composition.ts';
 import { SynthEngine } from './SynthEngine.ts';
 import { DrumEngine } from './DrumEngine.ts';
 
@@ -52,10 +46,7 @@ export class Transport {
   }
 
   set level(n: number) {
-    this.bpm = Math.min(
-      AUDIO_BASE_BPM + (n - 1) * AUDIO_BPM_PER_LEVEL,
-      AUDIO_MAX_BPM,
-    );
+    this.bpm = Math.min(AUDIO_BASE_BPM + (n - 1) * AUDIO_BPM_PER_LEVEL, AUDIO_MAX_BPM);
   }
 
   private get sixteenthDuration(): number {

@@ -1,10 +1,4 @@
-import {
-  PIECE_COLORS,
-  PIECE_COLORS_DARK,
-  UI_BG,
-  TEXT_COLOR,
-  GRID_COLOR,
-} from '../constants.ts';
+import { PIECE_COLORS, PIECE_COLORS_DARK, UI_BG, TEXT_COLOR, GRID_COLOR } from '../constants.ts';
 import { PIECE_SHAPES } from '../core/Piece.ts';
 import type { Layout } from '../layout.ts';
 import type { PieceType } from '../types.ts';
@@ -41,7 +35,10 @@ function drawMiniPiece(
   dimmed: boolean = false,
 ) {
   const cells = PIECE_SHAPES[type][0];
-  let minRow = Infinity, maxRow = -Infinity, minCol = Infinity, maxCol = -Infinity;
+  let minRow = Infinity,
+    maxRow = -Infinity,
+    minCol = Infinity,
+    maxCol = -Infinity;
   for (const [r, c] of cells) {
     minRow = Math.min(minRow, r);
     maxRow = Math.max(maxRow, r);
@@ -82,7 +79,18 @@ export function drawUI(
   level: number,
   lines: number,
 ) {
-  const { boardX, boardY, boardWidth, holdPanelX, holdPanelWidth, nextPanelX, nextPanelWidth, miniCell, statsTop, statsPanelHeight } = layout;
+  const {
+    boardX,
+    boardY,
+    boardWidth,
+    holdPanelX,
+    holdPanelWidth,
+    nextPanelX,
+    nextPanelWidth,
+    miniCell,
+    statsTop,
+    statsPanelHeight,
+  } = layout;
 
   // Hold panel
   const holdHeight = miniCell * 4 + 30;
@@ -100,7 +108,14 @@ export function drawUI(
   ctx.fillText('HOLD', holdPanelX + holdPanelWidth / 2, boardY + 18);
 
   if (holdPiece) {
-    drawMiniPiece(ctx, holdPiece, holdPanelX + holdPanelWidth / 2, boardY + holdHeight / 2 + 8, miniCell, holdUsed);
+    drawMiniPiece(
+      ctx,
+      holdPiece,
+      holdPanelX + holdPanelWidth / 2,
+      boardY + holdHeight / 2 + 8,
+      miniCell,
+      holdUsed,
+    );
   }
 
   // Next panel

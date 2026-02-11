@@ -92,13 +92,17 @@ describe('GameState', () => {
 
     it('moveLeft returns false at left wall', () => {
       const state = createState();
-      while (state.moveLeft()) { /* move to wall */ }
+      while (state.moveLeft()) {
+        /* move to wall */
+      }
       expect(state.moveLeft()).toBe(false);
     });
 
     it('moveRight returns false at right wall', () => {
       const state = createState();
-      while (state.moveRight()) { /* move to wall */ }
+      while (state.moveRight()) {
+        /* move to wall */
+      }
       expect(state.moveRight()).toBe(false);
     });
 
@@ -129,7 +133,9 @@ describe('GameState', () => {
 
     it('returns false when piece cannot move down', () => {
       const state = createState();
-      while (state.softDrop()) { /* drop to bottom */ }
+      while (state.softDrop()) {
+        /* drop to bottom */
+      }
       expect(state.softDrop()).toBe(false);
     });
   });
@@ -188,9 +194,7 @@ describe('GameState', () => {
     it('returns false when all kick positions are blocked', () => {
       const state = createState();
       // Fill entire board, then clear only the current piece cells
-      for (let r = 0; r < TOTAL_ROWS; r++)
-        for (let c = 0; c < COLS; c++)
-          state.board[r][c] = 'O';
+      for (let r = 0; r < TOTAL_ROWS; r++) for (let c = 0; c < COLS; c++) state.board[r][c] = 'O';
 
       // T at (2,3) rotation 0 cells: (2,4),(3,3),(3,4),(3,5)
       state.board[2][4] = null;
@@ -214,9 +218,9 @@ describe('GameState', () => {
 
     it('swaps hold piece with active piece on second hold', () => {
       const state = createState(); // T active
-      state.hold();                // hold=T, active=I
-      state.hardDrop();            // lock I, active=O, holdUsed reset
-      state.hold();                // hold=O, active=T (swapped back)
+      state.hold(); // hold=T, active=I
+      state.hardDrop(); // lock I, active=O, holdUsed reset
+      state.hold(); // hold=O, active=T (swapped back)
       expect(state.holdPiece).toBe('O');
       expect(state.activePiece!.type).toBe('T');
     });
@@ -231,9 +235,9 @@ describe('GameState', () => {
 
     it('resets hold availability after locking a piece', () => {
       const state = createState();
-      state.hold();     // holdUsed = true
+      state.hold(); // holdUsed = true
       state.hardDrop(); // spawnPiece resets holdUsed
-      state.hold();     // should succeed
+      state.hold(); // should succeed
       expect(state.holdPiece).toBe('O');
     });
 
@@ -241,9 +245,9 @@ describe('GameState', () => {
       const state = createState();
       state.rotate(1);
       state.moveLeft();
-      state.hold();     // hold T, active=I
+      state.hold(); // hold T, active=I
       state.hardDrop(); // lock I, active=O
-      state.hold();     // hold O, active=T from hold
+      state.hold(); // hold O, active=T from hold
 
       expect(state.activePiece!.rotation).toBe(0);
       expect(state.activePiece!.pos).toEqual({ row: SPAWN_ROW, col: SPAWN_COL });
@@ -264,7 +268,9 @@ describe('GameState', () => {
 
     it('returns null when piece is already at the bottom', () => {
       const state = createState();
-      while (state.softDrop()) { /* drop to bottom */ }
+      while (state.softDrop()) {
+        /* drop to bottom */
+      }
       expect(state.getGhostPosition()).toBeNull();
     });
   });
@@ -309,7 +315,9 @@ describe('GameState', () => {
   describe('lock delay', () => {
     it('locks piece after LOCK_DELAY_MS when grounded', () => {
       const state = createState();
-      while (state.softDrop()) { /* drop to bottom */ }
+      while (state.softDrop()) {
+        /* drop to bottom */
+      }
       state.tick(LOCK_DELAY_MS);
       // Should have locked and spawned the next piece
       expect(state.activePiece!.type).toBe('I');
@@ -317,25 +325,31 @@ describe('GameState', () => {
 
     it('does not lock before LOCK_DELAY_MS', () => {
       const state = createState();
-      while (state.softDrop()) { /* drop to bottom */ }
+      while (state.softDrop()) {
+        /* drop to bottom */
+      }
       state.tick(LOCK_DELAY_MS - 1);
       expect(state.activePiece!.type).toBe('T');
     });
 
     it('resets lock timer on horizontal movement', () => {
       const state = createState();
-      while (state.softDrop()) { /* drop to bottom */ }
+      while (state.softDrop()) {
+        /* drop to bottom */
+      }
 
       state.tick(LOCK_DELAY_MS - 100); // accumulate most of lock time
-      state.moveLeft();                // resets timer
-      state.tick(100);                 // only 100ms since reset — should NOT lock
+      state.moveLeft(); // resets timer
+      state.tick(100); // only 100ms since reset — should NOT lock
 
       expect(state.activePiece!.type).toBe('T');
     });
 
     it('stops resetting after MAX_LOCK_RESETS', () => {
       const state = createState();
-      while (state.softDrop()) { /* drop to bottom */ }
+      while (state.softDrop()) {
+        /* drop to bottom */
+      }
 
       // Exhaust all lock resets by alternating left/right
       for (let i = 0; i < MAX_LOCK_RESETS; i++) {
@@ -475,8 +489,7 @@ describe('GameState', () => {
       const state = createState();
       // Fill everything from BUFFER_ROWS down
       for (let r = BUFFER_ROWS; r < TOTAL_ROWS; r++)
-        for (let c = 0; c < COLS; c++)
-          state.board[r][c] = 'O';
+        for (let c = 0; c < COLS; c++) state.board[r][c] = 'O';
 
       // Clear only the T piece's current cells so it's in a valid position
       state.board[2][4] = null;

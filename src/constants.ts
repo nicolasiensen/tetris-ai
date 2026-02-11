@@ -17,8 +17,7 @@ export const SOFT_DROP_FACTOR = 20;
 // Level/speed — ms per gravity drop
 export function getDropInterval(level: number): number {
   const speeds = [
-    1000, 793, 618, 473, 355, 262, 190, 135, 94, 64,
-    43, 28, 18, 12, 8, 5, 3, 2, 1, 1,
+    1000, 793, 618, 473, 355, 262, 190, 135, 94, 64, 43, 28, 18, 12, 8, 5, 3, 2, 1, 1,
   ];
   return speeds[Math.min(level - 1, speeds.length - 1)];
 }
