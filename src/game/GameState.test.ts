@@ -168,6 +168,12 @@ describe('GameState', () => {
       expect(state.hardDropped).toBe(true);
     });
 
+    it('does not set locked flag on hard drop', () => {
+      const state = createState();
+      state.hardDrop();
+      expect(state.locked).toBe(false);
+    });
+
     it('spawns the next piece after locking', () => {
       const state = createState();
       state.hardDrop();
@@ -323,6 +329,16 @@ describe('GameState', () => {
       expect(state.activePiece!.type).toBe('I');
     });
 
+    it('sets locked flag when piece locks via gravity', () => {
+      const state = createState();
+      expect(state.locked).toBe(false);
+      while (state.softDrop()) {
+        /* drop to bottom */
+      }
+      state.tick(LOCK_DELAY_MS);
+      expect(state.locked).toBe(true);
+    });
+
     it('does not lock before LOCK_DELAY_MS', () => {
       const state = createState();
       while (state.softDrop()) {
@@ -399,6 +415,35 @@ describe('GameState', () => {
 
       state.tick(LINE_CLEAR_ANIM_MS);
       expect(state.lines).toBe(2);
+    });
+
+    it('sets linesCleared to the number of cleared rows', () => {
+      const state = createState();
+      for (let c = 0; c < COLS; c++) {
+        if (c < 3 || c > 5) state.board[TOTAL_ROWS - 1][c] = 'O';
+      }
+
+      state.hardDrop();
+      expect(state.linesCleared).toBe(1);
+    });
+
+    it('sets linesCleared for double clear', () => {
+      const state = createState(['O', 'T', 'I', 'S', 'Z', 'J', 'L']);
+      for (let c = 0; c < COLS; c++) {
+        if (c !== 4 && c !== 5) {
+          state.board[TOTAL_ROWS - 1][c] = 'I';
+          state.board[TOTAL_ROWS - 2][c] = 'I';
+        }
+      }
+
+      state.hardDrop();
+      expect(state.linesCleared).toBe(2);
+    });
+
+    it('linesCleared is 0 when no lines are cleared', () => {
+      const state = createState();
+      state.hardDrop();
+      expect(state.linesCleared).toBe(0);
     });
 
     it('does not finish animation before LINE_CLEAR_ANIM_MS', () => {
@@ -544,6 +589,8 @@ describe('GameState', () => {
       expect(state.isPaused).toBe(false);
       expect(state.holdPiece).toBeNull();
       expect(state.hardDropped).toBe(false);
+      expect(state.locked).toBe(false);
+      expect(state.linesCleared).toBe(0);
       expect(state.activePiece).not.toBeNull();
     });
   });

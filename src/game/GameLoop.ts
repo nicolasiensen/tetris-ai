@@ -68,7 +68,18 @@ export class GameLoop {
 
     if (this.gameState.hardDropped) {
       this.renderer.triggerShake();
+      if (this.audioStarted) this.audioManager.playHardDropLockSfx();
       this.gameState.hardDropped = false;
+    }
+
+    if (this.gameState.locked) {
+      if (this.audioStarted) this.audioManager.playLockSfx();
+      this.gameState.locked = false;
+    }
+
+    if (this.gameState.linesCleared > 0) {
+      if (this.audioStarted) this.audioManager.playLineClearSfx(this.gameState.linesCleared);
+      this.gameState.linesCleared = 0;
     }
 
     // Mute toggle

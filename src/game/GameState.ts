@@ -34,6 +34,8 @@ export class GameState {
   isGameOver = false;
   isPaused = false;
   hardDropped = false;
+  locked = false;
+  linesCleared = 0;
 
   // Line clear animation state (exposed for renderer)
   clearingRows: number[] = [];
@@ -238,6 +240,10 @@ export class GameState {
 
     lockPiece(this.board, this.activePiece);
 
+    if (!this.hardDropped) {
+      this.locked = true;
+    }
+
     // Check if piece locked entirely above visible area
     const cells = getCells(this.activePiece.type, this.activePiece.rotation, this.activePiece.pos);
     const allAbove = cells.every((c) => c.row < BUFFER_ROWS);
@@ -253,6 +259,7 @@ export class GameState {
       // Start animation — rows stay visible while flashing
       this.clearingRows = fullRows;
       this.clearAnimTimer = 0;
+      this.linesCleared = fullRows.length;
     } else {
       this.spawnPiece();
     }
@@ -288,6 +295,8 @@ export class GameState {
     this.isGrounded = false;
     this.softDropping = false;
     this.hardDropped = false;
+    this.locked = false;
+    this.linesCleared = 0;
     this.clearingRows = [];
     this.clearAnimTimer = 0;
     this.spawnPiece();
