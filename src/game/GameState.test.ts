@@ -164,7 +164,9 @@ describe('GameState', () => {
     it('emits hardDrop event', () => {
       const state = createState();
       let emitted = false;
-      state.on('hardDrop', () => { emitted = true; });
+      state.on('hardDrop', () => {
+        emitted = true;
+      });
       state.hardDrop();
       expect(emitted).toBe(true);
     });
@@ -172,7 +174,9 @@ describe('GameState', () => {
     it('does not emit lock event on hard drop', () => {
       const state = createState();
       let lockEmitted = false;
-      state.on('lock', () => { lockEmitted = true; });
+      state.on('lock', () => {
+        lockEmitted = true;
+      });
       state.hardDrop();
       expect(lockEmitted).toBe(false);
     });
@@ -335,7 +339,9 @@ describe('GameState', () => {
     it('emits lock event when piece locks via gravity', () => {
       const state = createState();
       let lockEmitted = false;
-      state.on('lock', () => { lockEmitted = true; });
+      state.on('lock', () => {
+        lockEmitted = true;
+      });
       while (state.softDrop()) {
         /* drop to bottom */
       }
@@ -424,7 +430,9 @@ describe('GameState', () => {
     it('emits lineClear event with count of cleared rows', () => {
       const state = createState();
       let clearCount = 0;
-      state.on('lineClear', ({ count }) => { clearCount = count; });
+      state.on('lineClear', ({ count }) => {
+        clearCount = count;
+      });
       for (let c = 0; c < COLS; c++) {
         if (c < 3 || c > 5) state.board[TOTAL_ROWS - 1][c] = 'O';
       }
@@ -436,7 +444,9 @@ describe('GameState', () => {
     it('emits lineClear event with count 2 for double clear', () => {
       const state = createState(['O', 'T', 'I', 'S', 'Z', 'J', 'L']);
       let clearCount = 0;
-      state.on('lineClear', ({ count }) => { clearCount = count; });
+      state.on('lineClear', ({ count }) => {
+        clearCount = count;
+      });
       for (let c = 0; c < COLS; c++) {
         if (c !== 4 && c !== 5) {
           state.board[TOTAL_ROWS - 1][c] = 'I';
@@ -451,7 +461,9 @@ describe('GameState', () => {
     it('does not emit lineClear event when no lines are cleared', () => {
       const state = createState();
       let lineClearEmitted = false;
-      state.on('lineClear', () => { lineClearEmitted = true; });
+      state.on('lineClear', () => {
+        lineClearEmitted = true;
+      });
       state.hardDrop();
       expect(lineClearEmitted).toBe(false);
     });
@@ -608,7 +620,9 @@ describe('GameState', () => {
     it('emits gameOver event when spawn position is blocked', () => {
       const state = createState(['T', 'T', 'I', 'O', 'S', 'Z', 'J']);
       let emitted = false;
-      state.on('gameOver', () => { emitted = true; });
+      state.on('gameOver', () => {
+        emitted = true;
+      });
       state.board[SPAWN_ROW][SPAWN_COL + 1] = 'O';
       state.board[SPAWN_ROW + 1][SPAWN_COL] = 'O';
       state.board[SPAWN_ROW + 1][SPAWN_COL + 1] = 'O';
@@ -620,7 +634,9 @@ describe('GameState', () => {
     it('emits pause event when isPaused set to true', () => {
       const state = createState();
       let emitted = false;
-      state.on('pause', () => { emitted = true; });
+      state.on('pause', () => {
+        emitted = true;
+      });
       state.isPaused = true;
       expect(emitted).toBe(true);
     });
@@ -629,7 +645,9 @@ describe('GameState', () => {
       const state = createState();
       state.isPaused = true;
       let emitted = false;
-      state.on('resume', () => { emitted = true; });
+      state.on('resume', () => {
+        emitted = true;
+      });
       state.isPaused = false;
       expect(emitted).toBe(true);
     });
@@ -637,8 +655,12 @@ describe('GameState', () => {
     it('does not emit when isPaused set to same value', () => {
       const state = createState();
       let count = 0;
-      state.on('pause', () => { count++; });
-      state.on('resume', () => { count++; });
+      state.on('pause', () => {
+        count++;
+      });
+      state.on('resume', () => {
+        count++;
+      });
       state.isPaused = false; // already false
       expect(count).toBe(0);
     });
@@ -646,7 +668,9 @@ describe('GameState', () => {
     it('emits levelChange when level increases', () => {
       const state = createState();
       let newLevel = 0;
-      state.on('levelChange', ({ level }) => { newLevel = level; });
+      state.on('levelChange', ({ level }) => {
+        newLevel = level;
+      });
       state.lines = LINES_PER_LEVEL - 1;
       for (let c = 0; c < COLS; c++) {
         if (c < 3 || c > 5) state.board[TOTAL_ROWS - 1][c] = 'O';
@@ -659,7 +683,9 @@ describe('GameState', () => {
     it('emits restart event on reset', () => {
       const state = createState();
       let emitted = false;
-      state.on('restart', () => { emitted = true; });
+      state.on('restart', () => {
+        emitted = true;
+      });
       state.reset();
       expect(emitted).toBe(true);
     });

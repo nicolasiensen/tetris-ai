@@ -10,6 +10,4 @@ export interface GameStateEventMap {
 }
 
 export type GameStateEventHandler<K extends keyof GameStateEventMap> =
-  GameStateEventMap[K] extends void
-    ? () => void
-    : (data: GameStateEventMap[K]) => void;
+  GameStateEventMap[K] extends void ? () => void : (data: GameStateEventMap[K]) => void;
