@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **mise** is used to manage project dependencies (node, npm, etc.)
 
+## Session Startup
+
+- Always start the Vite dev server (`npm run dev`) and TypeScript compiler in watch mode (`npx tsc --noEmit --watch`) at the beginning of each conversation
+
 ## Commands
 
 - **Dev server:** `npm run dev` (Vite dev server with HMR)
