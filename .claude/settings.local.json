@@ -5,7 +5,9 @@
       "Bash(npx tsc:*)",
       "Bash(npm run test:watch:*)",
       "Bash(npm run dev:*)",
-      "Bash(git -C /home/nicolasiensen/Projects/tetris-ai diff)"
+      "Bash(git -C /home/nicolasiensen/Projects/tetris-ai diff)",
+      "Bash(npm run test:*)",
+      "Bash(git -C /home/nicolasiensen/Projects/tetris-ai log --oneline -3)"
     ]
   }
 }

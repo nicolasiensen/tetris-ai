@@ -18,7 +18,6 @@ export class GameLoop {
   private renderer: Renderer;
   private audioManager: AudioManager;
   private audioStarted = false;
-  private wasGameOver = false;
   private canvas: HTMLCanvasElement;
   private touchEnabled: boolean;
 
@@ -37,6 +36,45 @@ export class GameLoop {
       canvas.style.touchAction = 'none';
       this.touchInput = new TouchInput(canvas, layout);
     }
+
+    // Subscribe to game state events
+    this.gameState.on('hardDrop', () => {
+      this.renderer.triggerShake();
+      if (this.audioStarted) this.audioManager.playHardDropLockSfx();
+    });
+
+    this.gameState.on('lock', () => {
+      if (this.audioStarted) this.audioManager.playLockSfx();
+    });
+
+    this.gameState.on('lineClear', ({ count }) => {
+      if (this.audioStarted) this.audioManager.playLineClearSfx(count);
+    });
+
+    this.gameState.on('gameOver', () => {
+      if (this.audioStarted) this.audioManager.stop();
+    });
+
+    this.gameState.on('pause', () => {
+      if (this.audioStarted) this.audioManager.pause();
+    });
+
+    this.gameState.on('resume', () => {
+      if (this.audioStarted) {
+        this.audioManager.resume();
+        this.audioManager.setLevel(this.gameState.level);
+      }
+    });
+
+    this.gameState.on('levelChange', ({ level }) => {
+      if (this.audioStarted) this.audioManager.setLevel(level);
+    });
+
+    this.gameState.on('restart', () => {
+      if (this.audioStarted) this.audioManager.restart();
+    });
+
+    this.input.onMuteToggle = () => this.audioManager.toggleMute();
 
     window.addEventListener('resize', this.onResize);
     window.addEventListener('keydown', this.onFirstInteraction, { once: true });
@@ -59,50 +97,11 @@ export class GameLoop {
   private loop = (currentTime: number): void => {
     const delta = currentTime - this.lastTime;
     this.lastTime = currentTime;
-
     const cappedDelta = Math.min(delta, 100);
 
     this.input.update(cappedDelta, this.gameState);
     this.touchInput?.update(cappedDelta, this.gameState);
     this.gameState.tick(cappedDelta);
-
-    if (this.gameState.hardDropped) {
-      this.renderer.triggerShake();
-      if (this.audioStarted) this.audioManager.playHardDropLockSfx();
-      this.gameState.hardDropped = false;
-    }
-
-    if (this.gameState.locked) {
-      if (this.audioStarted) this.audioManager.playLockSfx();
-      this.gameState.locked = false;
-    }
-
-    if (this.gameState.linesCleared > 0) {
-      if (this.audioStarted) this.audioManager.playLineClearSfx(this.gameState.linesCleared);
-      this.gameState.linesCleared = 0;
-    }
-
-    // Mute toggle
-    if (this.input.muteToggled) {
-      this.audioManager.toggleMute();
-      this.input.muteToggled = false;
-    }
-
-    // Audio state sync
-    if (this.audioStarted) {
-      if (this.gameState.isGameOver) {
-        this.audioManager.stop();
-      } else if (this.wasGameOver && !this.gameState.isGameOver) {
-        this.audioManager.restart();
-      } else if (this.gameState.isPaused) {
-        this.audioManager.pause();
-      } else {
-        this.audioManager.resume();
-        this.audioManager.setLevel(this.gameState.level);
-      }
-    }
-    this.wasGameOver = this.gameState.isGameOver;
-
     this.renderer.render(this.gameState, cappedDelta, this.touchInput?.buttonState);
 
     this.animationId = requestAnimationFrame(this.loop);

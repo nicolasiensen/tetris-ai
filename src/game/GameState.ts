@@ -22,6 +22,7 @@ import { SPAWN_COL, SPAWN_ROW } from '../core/Piece.ts';
 import { tryRotation } from '../core/Rotation.ts';
 import { Randomizer } from '../core/Randomizer.ts';
 import type { ActivePiece, BoardGrid, PieceType, Position } from '../types.ts';
+import type { GameStateEventMap, GameStateEventHandler } from './GameStateEvents.ts';
 
 export class GameState {
   board: BoardGrid;
@@ -32,10 +33,18 @@ export class GameState {
   level = 1;
   lines = 0;
   isGameOver = false;
-  isPaused = false;
-  hardDropped = false;
-  locked = false;
-  linesCleared = 0;
+
+  private _isPaused = false;
+
+  get isPaused(): boolean {
+    return this._isPaused;
+  }
+
+  set isPaused(value: boolean) {
+    if (value === this._isPaused) return;
+    this._isPaused = value;
+    this.emit(value ? 'pause' : 'resume');
+  }
 
   // Line clear animation state (exposed for renderer)
   clearingRows: number[] = [];
@@ -48,12 +57,43 @@ export class GameState {
   private lockResets = 0;
   private isGrounded = false;
   softDropping = false;
+  private _wasHardDrop = false;
+
+  // Event listeners
+  private listeners: {
+    [K in keyof GameStateEventMap]?: GameStateEventHandler<K>[];
+  } = {};
 
   constructor(randomizer?: Randomizer) {
     this.createRandomizer = randomizer ? () => randomizer : () => new Randomizer();
     this.board = createBoard();
     this.randomizer = this.createRandomizer();
     this.spawnPiece();
+  }
+
+  on<K extends keyof GameStateEventMap>(event: K, handler: GameStateEventHandler<K>): void {
+    if (!this.listeners[event]) {
+      this.listeners[event] = [];
+    }
+    (this.listeners[event] as GameStateEventHandler<K>[]).push(handler);
+  }
+
+  off<K extends keyof GameStateEventMap>(event: K, handler: GameStateEventHandler<K>): void {
+    const list = this.listeners[event];
+    if (!list) return;
+    const idx = (list as GameStateEventHandler<K>[]).indexOf(handler);
+    if (idx >= 0) list.splice(idx, 1);
+  }
+
+  private emit<K extends keyof GameStateEventMap>(
+    event: K,
+    ...args: GameStateEventMap[K] extends void ? [] : [GameStateEventMap[K]]
+  ): void {
+    const list = this.listeners[event];
+    if (!list) return;
+    for (const handler of list) {
+      (handler as (...a: unknown[]) => void)(...args);
+    }
   }
 
   getNextPieces(): PieceType[] {
@@ -82,6 +122,7 @@ export class GameState {
     if (!isValidPosition(this.board, piece.type, piece.rotation, piece.pos)) {
       this.activePiece = piece; // show the piece overlapping for game over visual
       this.isGameOver = true;
+      this.emit('gameOver');
       return;
     }
 
@@ -117,7 +158,8 @@ export class GameState {
       rows++;
     }
     this.score += rows * HARD_DROP_SCORE;
-    this.hardDropped = true;
+    this.emit('hardDrop');
+    this._wasHardDrop = true;
     this.doLock();
   }
 
@@ -240,15 +282,17 @@ export class GameState {
 
     lockPiece(this.board, this.activePiece);
 
-    if (!this.hardDropped) {
-      this.locked = true;
+    if (!this._wasHardDrop) {
+      this.emit('lock');
     }
+    this._wasHardDrop = false;
 
     // Check if piece locked entirely above visible area
     const cells = getCells(this.activePiece.type, this.activePiece.rotation, this.activePiece.pos);
     const allAbove = cells.every((c) => c.row < BUFFER_ROWS);
     if (allAbove) {
       this.isGameOver = true;
+      this.emit('gameOver');
       return;
     }
 
@@ -259,7 +303,7 @@ export class GameState {
       // Start animation — rows stay visible while flashing
       this.clearingRows = fullRows;
       this.clearAnimTimer = 0;
-      this.linesCleared = fullRows.length;
+      this.emit('lineClear', { count: fullRows.length });
     } else {
       this.spawnPiece();
     }
@@ -271,7 +315,11 @@ export class GameState {
 
     this.lines += count;
     this.score += (SCORE_TABLE[count] ?? 0) * this.level;
-    this.level = Math.floor(this.lines / LINES_PER_LEVEL) + 1;
+    const newLevel = Math.floor(this.lines / LINES_PER_LEVEL) + 1;
+    if (newLevel !== this.level) {
+      this.level = newLevel;
+      this.emit('levelChange', { level: newLevel });
+    }
 
     this.clearingRows = [];
     this.clearAnimTimer = 0;
@@ -287,18 +335,17 @@ export class GameState {
     this.level = 1;
     this.lines = 0;
     this.isGameOver = false;
-    this.isPaused = false;
+    this._isPaused = false;
     this.randomizer = new Randomizer();
     this.dropTimer = 0;
     this.lockTimer = 0;
     this.lockResets = 0;
     this.isGrounded = false;
     this.softDropping = false;
-    this.hardDropped = false;
-    this.locked = false;
-    this.linesCleared = 0;
+    this._wasHardDrop = false;
     this.clearingRows = [];
     this.clearAnimTimer = 0;
     this.spawnPiece();
+    this.emit('restart');
   }
 }

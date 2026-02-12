@@ -2,7 +2,7 @@ import { DAS_DELAY_MS, ARR_MS } from '../constants.ts';
 import type { GameState } from './GameState.ts';
 
 export class Input {
-  muteToggled = false;
+  onMuteToggle: (() => void) | null = null;
 
   private keysDown = new Set<string>();
   private keysJustPressed = new Set<string>();
@@ -18,7 +18,7 @@ export class Input {
   update(delta: number, state: GameState): void {
     // Mute toggle works in any state
     if (this.keysJustPressed.has('KeyM')) {
-      this.muteToggled = true;
+      this.onMuteToggle?.();
     }
 
     if (state.isGameOver) {

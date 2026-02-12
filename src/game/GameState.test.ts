@@ -161,17 +161,20 @@ describe('GameState', () => {
       expect(state.score).toBe(20 * HARD_DROP_SCORE);
     });
 
-    it('sets hardDropped flag', () => {
+    it('emits hardDrop event', () => {
       const state = createState();
-      expect(state.hardDropped).toBe(false);
+      let emitted = false;
+      state.on('hardDrop', () => { emitted = true; });
       state.hardDrop();
-      expect(state.hardDropped).toBe(true);
+      expect(emitted).toBe(true);
     });
 
-    it('does not set locked flag on hard drop', () => {
+    it('does not emit lock event on hard drop', () => {
       const state = createState();
+      let lockEmitted = false;
+      state.on('lock', () => { lockEmitted = true; });
       state.hardDrop();
-      expect(state.locked).toBe(false);
+      expect(lockEmitted).toBe(false);
     });
 
     it('spawns the next piece after locking', () => {
@@ -329,14 +332,15 @@ describe('GameState', () => {
       expect(state.activePiece!.type).toBe('I');
     });
 
-    it('sets locked flag when piece locks via gravity', () => {
+    it('emits lock event when piece locks via gravity', () => {
       const state = createState();
-      expect(state.locked).toBe(false);
+      let lockEmitted = false;
+      state.on('lock', () => { lockEmitted = true; });
       while (state.softDrop()) {
         /* drop to bottom */
       }
       state.tick(LOCK_DELAY_MS);
-      expect(state.locked).toBe(true);
+      expect(lockEmitted).toBe(true);
     });
 
     it('does not lock before LOCK_DELAY_MS', () => {
@@ -417,18 +421,22 @@ describe('GameState', () => {
       expect(state.lines).toBe(2);
     });
 
-    it('sets linesCleared to the number of cleared rows', () => {
+    it('emits lineClear event with count of cleared rows', () => {
       const state = createState();
+      let clearCount = 0;
+      state.on('lineClear', ({ count }) => { clearCount = count; });
       for (let c = 0; c < COLS; c++) {
         if (c < 3 || c > 5) state.board[TOTAL_ROWS - 1][c] = 'O';
       }
 
       state.hardDrop();
-      expect(state.linesCleared).toBe(1);
+      expect(clearCount).toBe(1);
     });
 
-    it('sets linesCleared for double clear', () => {
+    it('emits lineClear event with count 2 for double clear', () => {
       const state = createState(['O', 'T', 'I', 'S', 'Z', 'J', 'L']);
+      let clearCount = 0;
+      state.on('lineClear', ({ count }) => { clearCount = count; });
       for (let c = 0; c < COLS; c++) {
         if (c !== 4 && c !== 5) {
           state.board[TOTAL_ROWS - 1][c] = 'I';
@@ -437,13 +445,15 @@ describe('GameState', () => {
       }
 
       state.hardDrop();
-      expect(state.linesCleared).toBe(2);
+      expect(clearCount).toBe(2);
     });
 
-    it('linesCleared is 0 when no lines are cleared', () => {
+    it('does not emit lineClear event when no lines are cleared', () => {
       const state = createState();
+      let lineClearEmitted = false;
+      state.on('lineClear', () => { lineClearEmitted = true; });
       state.hardDrop();
-      expect(state.linesCleared).toBe(0);
+      expect(lineClearEmitted).toBe(false);
     });
 
     it('does not finish animation before LINE_CLEAR_ANIM_MS', () => {
@@ -588,10 +598,70 @@ describe('GameState', () => {
       expect(state.isGameOver).toBe(false);
       expect(state.isPaused).toBe(false);
       expect(state.holdPiece).toBeNull();
-      expect(state.hardDropped).toBe(false);
-      expect(state.locked).toBe(false);
-      expect(state.linesCleared).toBe(0);
       expect(state.activePiece).not.toBeNull();
+    });
+  });
+
+  // ── events ─────────────────────────────────────────────────────
+
+  describe('events', () => {
+    it('emits gameOver event when spawn position is blocked', () => {
+      const state = createState(['T', 'T', 'I', 'O', 'S', 'Z', 'J']);
+      let emitted = false;
+      state.on('gameOver', () => { emitted = true; });
+      state.board[SPAWN_ROW][SPAWN_COL + 1] = 'O';
+      state.board[SPAWN_ROW + 1][SPAWN_COL] = 'O';
+      state.board[SPAWN_ROW + 1][SPAWN_COL + 1] = 'O';
+      state.board[SPAWN_ROW + 1][SPAWN_COL + 2] = 'O';
+      state.hardDrop();
+      expect(emitted).toBe(true);
+    });
+
+    it('emits pause event when isPaused set to true', () => {
+      const state = createState();
+      let emitted = false;
+      state.on('pause', () => { emitted = true; });
+      state.isPaused = true;
+      expect(emitted).toBe(true);
+    });
+
+    it('emits resume event when isPaused set to false', () => {
+      const state = createState();
+      state.isPaused = true;
+      let emitted = false;
+      state.on('resume', () => { emitted = true; });
+      state.isPaused = false;
+      expect(emitted).toBe(true);
+    });
+
+    it('does not emit when isPaused set to same value', () => {
+      const state = createState();
+      let count = 0;
+      state.on('pause', () => { count++; });
+      state.on('resume', () => { count++; });
+      state.isPaused = false; // already false
+      expect(count).toBe(0);
+    });
+
+    it('emits levelChange when level increases', () => {
+      const state = createState();
+      let newLevel = 0;
+      state.on('levelChange', ({ level }) => { newLevel = level; });
+      state.lines = LINES_PER_LEVEL - 1;
+      for (let c = 0; c < COLS; c++) {
+        if (c < 3 || c > 5) state.board[TOTAL_ROWS - 1][c] = 'O';
+      }
+      state.hardDrop();
+      state.tick(LINE_CLEAR_ANIM_MS);
+      expect(newLevel).toBe(2);
+    });
+
+    it('emits restart event on reset', () => {
+      const state = createState();
+      let emitted = false;
+      state.on('restart', () => { emitted = true; });
+      state.reset();
+      expect(emitted).toBe(true);
     });
   });
 });
