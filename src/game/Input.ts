@@ -3,6 +3,7 @@ import type { GameState } from './GameState.ts';
 
 export class Input {
   onMuteToggle: (() => void) | null = null;
+  restartBlocked = false;
 
   private keysDown = new Set<string>();
   private keysJustPressed = new Set<string>();
@@ -22,7 +23,7 @@ export class Input {
     }
 
     if (state.isGameOver) {
-      if (this.keysJustPressed.has('KeyR')) {
+      if (this.keysJustPressed.has('KeyR') && !this.restartBlocked) {
         state.reset();
       }
       this.keysJustPressed.clear();

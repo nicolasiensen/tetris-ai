@@ -8,7 +8,8 @@
       "Bash(git -C /home/nicolasiensen/Projects/tetris-ai diff)",
       "Bash(npm run test:*)",
       "Bash(git -C /home/nicolasiensen/Projects/tetris-ai log --oneline -3)",
-      "Bash(npx prettier:*)"
+      "Bash(npx prettier:*)",
+      "Bash(npm run dev:all:*)"
     ]
   }
 }

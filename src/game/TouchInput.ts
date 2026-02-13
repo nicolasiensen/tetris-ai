@@ -49,6 +49,7 @@ function pointInRect(x: number, y: number, rect: ButtonRect): boolean {
 }
 
 export class TouchInput {
+  restartBlocked = false;
   private canvas: HTMLCanvasElement;
   private layout: Layout;
   private gesture: GestureState | null = null;
@@ -76,7 +77,7 @@ export class TouchInput {
 
     for (const action of actions) {
       if (state.isGameOver) {
-        if (action.type === 'reset' || action.type === 'rotateCW') {
+        if ((action.type === 'reset' || action.type === 'rotateCW') && !this.restartBlocked) {
           state.reset();
         }
         continue;

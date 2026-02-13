@@ -17,8 +17,185 @@ body {
     sans-serif;
 }
 
+#game-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 canvas {
   display: block;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
   border-radius: 8px;
+}
+
+/* Leaderboard overlay */
+#leaderboard-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.lb-panel {
+  background: #16213e;
+  border: 1px solid #1a3a5c;
+  border-radius: 12px;
+  padding: 28px 32px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+}
+
+.lb-title {
+  color: #00f0f0;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 18px;
+  letter-spacing: 2px;
+}
+
+.lb-stats {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.lb-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lb-label {
+  color: #888;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.lb-value {
+  color: #e0e0e0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.lb-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lb-input {
+  background: #0a0a1a;
+  border: 1px solid #1a3a5c;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 16px;
+  padding: 10px 12px;
+  text-align: center;
+  outline: none;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+.lb-input:focus {
+  border-color: #00f0f0;
+}
+
+.lb-input::placeholder {
+  color: #555;
+}
+
+.lb-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.lb-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  transition: opacity 0.15s;
+}
+
+.lb-btn:hover {
+  opacity: 0.85;
+}
+
+.lb-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.lb-btn-primary {
+  background: #00f0f0;
+  color: #0a0a1a;
+}
+
+.lb-btn-secondary {
+  background: #333;
+  color: #e0e0e0;
+}
+
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 18px;
+}
+
+.lb-table th {
+  color: #888;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 6px 4px;
+  border-bottom: 1px solid #1a3a5c;
+}
+
+.lb-table td {
+  color: #e0e0e0;
+  font-size: 13px;
+  padding: 8px 4px;
+  border-bottom: 1px solid rgba(26, 58, 92, 0.4);
+}
+
+.lb-rank {
+  color: #00f0f0;
+  font-weight: bold;
+}
+
+.lb-name {
+  text-align: left;
+}
+
+.lb-score {
+  font-weight: bold;
+}
+
+.lb-empty {
+  color: #555;
+  font-style: italic;
+  padding: 20px;
+}
+
+.lb-loading {
+  color: #888;
+  padding: 30px;
+}
+
+.lb-play-again {
+  width: 100%;
 }
