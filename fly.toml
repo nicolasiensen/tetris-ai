@@ -1,5 +1,5 @@
 app = 'tetris-ai'
-primary_region = 'ord'
+primary_region = 'fra'
 
 [build]
 
