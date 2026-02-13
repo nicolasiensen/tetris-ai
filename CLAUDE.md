@@ -2,10 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Tooling
-
-- **mise** is used to manage project dependencies (node, npm, etc.)
-
 ## Session Startup
 
 - Always start the Vite dev server (`npm run dev`) and TypeScript compiler in watch mode (`npx tsc --noEmit --watch`) at the beginning of each conversation
