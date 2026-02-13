@@ -20,6 +20,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Run tests:** `npm run test` (one-off run via Vitest)
 - **Watch mode:** `npm run test:watch` (continuous feedback)
 
+## Docker
+
+Run the production build locally with Docker Compose:
+
+```sh
+docker compose up --build
+```
+
+The app will be available at `http://localhost:3000`. SQLite data is persisted in a named Docker volume.
+
+To stop: `docker compose down` (add `-v` to also remove the data volume).
+
 ## Testing Workflow
 
 - **Run tests after every file change** to catch regressions immediately
