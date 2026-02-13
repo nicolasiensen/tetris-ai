@@ -3,6 +3,8 @@ import { Input } from './Input.ts';
 import { TouchInput } from './TouchInput.ts';
 import { Renderer } from '../render/Renderer.ts';
 import { AudioManager } from '../audio/AudioManager.ts';
+import { LeaderboardOverlay } from '../ui/LeaderboardOverlay.ts';
+import { createSession } from '../api.ts';
 import { computeLayout } from '../layout.ts';
 
 function isTouchDevice(): boolean {
@@ -17,9 +19,11 @@ export class GameLoop {
   private touchInput: TouchInput | null = null;
   private renderer: Renderer;
   private audioManager: AudioManager;
+  private leaderboardOverlay: LeaderboardOverlay;
   private audioStarted = false;
   private canvas: HTMLCanvasElement;
   private touchEnabled: boolean;
+  private sessionToken: string | null = null;
 
   constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     this.canvas = canvas;
@@ -30,7 +34,13 @@ export class GameLoop {
     this.input = new Input();
     this.renderer = new Renderer(ctx, layout);
     this.audioManager = new AudioManager();
+    this.leaderboardOverlay = new LeaderboardOverlay(canvas.parentElement!, () => {
+      this.input.restartBlocked = false;
+      if (this.touchInput) this.touchInput.restartBlocked = false;
+      this.gameState.reset();
+    });
     this.applyLayout(layout);
+    this.requestSession();
 
     if (this.touchEnabled) {
       canvas.style.touchAction = 'none';
@@ -53,6 +63,20 @@ export class GameLoop {
 
     this.gameState.on('gameOver', () => {
       if (this.audioStarted) this.audioManager.stop();
+      this.input.restartBlocked = true;
+      if (this.touchInput) this.touchInput.restartBlocked = true;
+      const token = this.sessionToken;
+      this.sessionToken = null;
+      setTimeout(() => {
+        this.leaderboardOverlay.show(
+          {
+            score: this.gameState.score,
+            level: this.gameState.level,
+            lines: this.gameState.lines,
+          },
+          token,
+        );
+      }, 500);
     });
 
     this.gameState.on('pause', () => {
@@ -72,6 +96,8 @@ export class GameLoop {
 
     this.gameState.on('restart', () => {
       if (this.audioStarted) this.audioManager.restart();
+      this.leaderboardOverlay.hide();
+      this.requestSession();
     });
 
     this.input.onMuteToggle = () => this.audioManager.toggleMute();
@@ -107,6 +133,16 @@ export class GameLoop {
     this.animationId = requestAnimationFrame(this.loop);
   };
 
+  private requestSession(): void {
+    createSession()
+      .then(({ token }) => {
+        this.sessionToken = token;
+      })
+      .catch(() => {
+        this.sessionToken = null;
+      });
+  }
+
   private onResize = (): void => {
     const layout = computeLayout(window.innerWidth, window.innerHeight, this.touchEnabled);
     this.renderer.layout = layout;
@@ -133,5 +169,6 @@ export class GameLoop {
     this.input.destroy();
     this.touchInput?.destroy();
     this.audioManager.destroy();
+    this.leaderboardOverlay.destroy();
   }
 }
