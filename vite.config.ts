@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/tetris-ai/',
+  base: '/',
   server: {
     allowedHosts: ['.ngrok-free.app'],
     proxy: {
