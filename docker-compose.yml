@@ -6,5 +6,11 @@ services:
     volumes:
       - data:/app/data
 
+  test:
+    build:
+      context: .
+      target: build
+    command: npm run test
+
 volumes:
   data:

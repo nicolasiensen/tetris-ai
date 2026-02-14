@@ -4,29 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Session Startup
 
-- Always start the Vite dev server (`npm run dev`) and TypeScript compiler in watch mode (`npx tsc --noEmit --watch`) at the beginning of each conversation
+- Always start the app with `docker compose up --build -d` at the beginning of each conversation
 
 ## Commands
 
-- **Dev server:** `npm run dev` (Vite dev server with HMR)
-- **Build:** `npm run build` (runs `tsc && vite build`, output to `dist/`)
-- **Preview production build:** `npm run preview`
-- **Type check only:** `npx tsc --noEmit`
+All commands run via Docker Compose:
 
-- **Run tests:** `npm run test` (one-off run via Vitest)
-- **Watch mode:** `npm run test:watch` (continuous feedback)
+- **Start app:** `docker compose up --build -d` (builds and runs at `http://localhost:3000`)
+- **Stop app:** `docker compose down` (add `-v` to also remove the data volume)
+- **Run tests:** `docker compose run --build --rm test`
+- **Format check:** `docker compose run --build --rm test npm run format:check`
+- **Format fix:** `docker compose run --build --rm test npm run format`
 
-## Docker
-
-Run the production build locally with Docker Compose:
-
-```sh
-docker compose up --build
-```
-
-The app will be available at `http://localhost:3000`. SQLite data is persisted in a named Docker volume.
-
-To stop: `docker compose down` (add `-v` to also remove the data volume).
+SQLite data is persisted in a named Docker volume.
 
 ## Testing Workflow
 
