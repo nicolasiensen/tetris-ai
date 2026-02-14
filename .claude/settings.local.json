@@ -9,7 +9,9 @@
       "Bash(npm run test:*)",
       "Bash(git -C /home/nicolasiensen/Projects/tetris-ai log --oneline -3)",
       "Bash(npx prettier:*)",
-      "Bash(npm run dev:all:*)"
+      "Bash(npm run dev:all:*)",
+      "Bash(docker compose up:*)",
+      "Bash(docker compose run:*)"
     ]
   }
 }
