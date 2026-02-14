@@ -93,10 +93,22 @@ export class LeaderboardOverlay {
     requestAnimationFrame(() => input.focus());
   }
 
-  private async showLeaderboard(): Promise<void> {
+  showForPause(onResume: () => void): void {
+    this.overlay.style.display = 'flex';
+    this.renderLeaderboardPanel('PAUSED', 'Resume', () => {
+      this.hide();
+      onResume();
+    });
+  }
+
+  private async renderLeaderboardPanel(
+    title: string,
+    buttonLabel: string,
+    onButtonClick: () => void,
+  ): Promise<void> {
     this.overlay.innerHTML = `
       <div class="lb-panel">
-        <h1 class="lb-title">LEADERBOARD</h1>
+        <h1 class="lb-title">${title}</h1>
         <div class="lb-loading">Loading...</div>
       </div>
     `;
@@ -129,7 +141,7 @@ export class LeaderboardOverlay {
 
     this.overlay.innerHTML = `
       <div class="lb-panel">
-        <h1 class="lb-title">LEADERBOARD</h1>
+        <h1 class="lb-title">${title}</h1>
         <table class="lb-table">
           <thead>
             <tr>
@@ -142,12 +154,16 @@ export class LeaderboardOverlay {
           </thead>
           <tbody>${tableRows}</tbody>
         </table>
-        <button class="lb-btn lb-btn-primary lb-play-again">Play Again</button>
+        <button class="lb-btn lb-btn-primary lb-action-btn">${buttonLabel}</button>
       </div>
     `;
 
-    const playAgainBtn = this.overlay.querySelector('.lb-play-again') as HTMLButtonElement;
-    playAgainBtn.addEventListener('click', () => {
+    const actionBtn = this.overlay.querySelector('.lb-action-btn') as HTMLButtonElement;
+    actionBtn.addEventListener('click', onButtonClick);
+  }
+
+  private async showLeaderboard(): Promise<void> {
+    await this.renderLeaderboardPanel('LEADERBOARD', 'Play Again', () => {
       this.hide();
       this.onRestart();
     });

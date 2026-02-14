@@ -81,6 +81,9 @@ export class GameLoop {
 
     this.gameState.on('pause', () => {
       if (this.audioStarted) this.audioManager.pause();
+      this.leaderboardOverlay.showForPause(() => {
+        this.gameState.isPaused = false;
+      });
     });
 
     this.gameState.on('resume', () => {
@@ -88,6 +91,7 @@ export class GameLoop {
         this.audioManager.resume();
         this.audioManager.setLevel(this.gameState.level);
       }
+      this.leaderboardOverlay.hide();
     });
 
     this.gameState.on('levelChange', ({ level }) => {
