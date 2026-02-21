@@ -125,11 +125,9 @@ export class TouchInput {
 
   private canvasCoords(touch: Touch): { x: number; y: number } {
     const rect = this.canvas.getBoundingClientRect();
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
     return {
-      x: (touch.clientX - rect.left) * scaleX,
-      y: (touch.clientY - rect.top) * scaleY,
+      x: (touch.clientX - rect.left) * (this.layout.canvasWidth / rect.width),
+      y: (touch.clientY - rect.top) * (this.layout.canvasHeight / rect.height),
     };
   }
 
